@@ -11,7 +11,12 @@ print('Loading Libraries',datetime.now());
 # Intentionally ignoring certain waring messages that we know are not relevant to this program, l
 # like deprecated functions or changed default parameters.
 # This is done to avoid cluttering the output with warnings that are not relevant to this program.
-# other condittions with higher seriousness will still be displayed.
+# other conditions with higher seriousness will still be displayed.
+#
+# displaying time for loading libraries, just to evaluate the time it takes to load libraries
+# program is being tested under two architectures:
+# one is a MacBook Pro M2 Ultra with 32GB of RAM.
+# the other is a Alienware M18 with 32 GB of RAM.
 #
 
 import warnings
@@ -25,16 +30,10 @@ from   sklearn.preprocessing import StandardScaler;
 
 print('Libraries Loaded ',datetime.now());
 
-# 
-# displaying time for loading libraries, just to evaluate the time it takes to load libraries
-# program is being tested under two architectures:
-# one is a MacBook Pro M2 Ultra with 32GB of RAM.
-# the other is a Alienware M18 with 32 GB of RAM.
-#
 
 # %%
 #
-# Data Dicitionary, with variables used in the program
+# Data Dictionary, with variables used in the program
 #
 # Camel Case variables are used for variables that are used in the program
 #
@@ -57,34 +56,34 @@ print('Libraries Loaded ',datetime.now());
 # 
 # Load the data into a Pandas DataFrame
 #
-# The overall asumption is that the data is already clean and ready to be used
+# The overall assumption is that the data is already clean and ready to be used
 #
 
-print('Loading Data',datetime.now())
-df_Source_Data = pd.read_csv("Resources/crypto_market_data.csv",index_col="coin_id")
+print('Loading Data',datetime.now());
+df_Source_Data = pd.read_csv("Resources/crypto_market_data.csv",index_col="coin_id");
 
 #
 # Display sample data
 #
 
-print(df_Source_Data.head(10))
-print('Data Loaded ',datetime.now())
+print(df_Source_Data.head(10));
+print('Data Loaded ',datetime.now());
 
 # %%
 #
 # Generate summary statistics
 #
 
-print('Summary Statistics',datetime.now())
-df_Source_Data.describe()
+print('Summary Statistics',datetime.now());
+df_Source_Data.describe();
 
 # %%
 #
 # Plot your data to see what's in your DataFrame
 #
 
-print('Plotting Data',datetime.now())
-df_Source_Data.hvplot.line(width=1200,height=600,rot=90)
+print('Plotting Data',datetime.now());
+df_Source_Data.hvplot.line(width=1200,height=600,rot=90);
 
 # %% [markdown]
 # ---
@@ -99,46 +98,46 @@ df_Source_Data.hvplot.line(width=1200,height=600,rot=90)
 # This means that the data is skewed and needs to be normalized.
 #
 
-print('Normalizing Data',datetime.now())
-crypto_Scaled_Array = StandardScaler().fit_transform(df_Source_Data)
-print(crypto_Scaled_Array)
-print('Data Normalized',datetime.now())
+print('Normalizing Data',datetime.now());
+crypto_Scaled_Array = StandardScaler().fit_transform(df_Source_Data);
+print(crypto_Scaled_Array);
+print('Data Normalized',datetime.now());
 
 # %%
 #
 # Create a DataFrame with the scaled data
 #
 
-print('Before DataFrame transformation',datetime.now())
+print('Before DataFrame transformation',datetime.now());
 crypto_Transformed = pd.DataFrame(crypto_Scaled_Array, columns=['price_change_percentage_24h', 
                                                                 'price_change_percentage_7d',
                                                                 'price_change_percentage_14d', 
                                                                 'price_change_percentage_30d', 
                                                                 'price_change_percentage_60d', 
                                                                 'price_change_percentage_200d',	
-                                                                'price_change_percentage_1y'])
-print(crypto_Transformed)
+                                                                'price_change_percentage_1y']);
+print(crypto_Transformed);
 
 #
 # Copy the crypto names from the original data
 #
 
-coins_Names                   = list(df_Source_Data.index) #create a list of the coins names
-print(coins_Names)
+coins_Names                   = list(df_Source_Data.index);
+print(coins_Names);
 
 #
-# Set the coinid column as index
+# Set the coin id column as index
 #
 
-crypto_Transformed['coin_id'] = coins_Names                             #create a new column with the coin names
-crypto_Transformed            = crypto_Transformed.set_index('coin_id') #set the coin names as index
+crypto_Transformed['coin_id'] = coins_Names;
+crypto_Transformed            = crypto_Transformed.set_index('coin_id');
 
 #
 # Display sample data
 #
 
-print('After DataFrame transformation',datetime.now())
-print(crypto_Transformed)
+print('After DataFrame transformation',datetime.now());
+print(crypto_Transformed);
 
 # %% [markdown]
 # ---
@@ -151,15 +150,15 @@ print(crypto_Transformed)
 # Create a list with the number of k-values from 1 to 11
 #
 
-k = list(range(1,12))
-print('Values of k',k)
+k = list(range(1,12));
+print('Values of k',k);
 
 # %%
 #
 # Create an empty list to store the inertia values
 #
 
-inertia_1 = []
+inertia_1 = [];
 
 #
 # Create a for loop to compute the inertia with each possible value of k
@@ -170,25 +169,25 @@ inertia_1 = []
 #
 
 for i in k:
-    k_model = KMeans(n_clusters=i, random_state=1,n_init=10,max_iter=1000) #n_init=10,max_iter=1000 provided to avoid depcrecation warning
-    k_model.fit(crypto_Transformed)
-    inertia_1.append(k_model.inertia_)
-print('Values of Inertia ',inertia_1)
+    k_model = KMeans(n_clusters=i, random_state=1,n_init=10,max_iter=1000);
+    k_model.fit(crypto_Transformed);
+    inertia_1.append(k_model.inertia_);
+print('Values of Inertia ',inertia_1);
 
 # %%
 #
 # Create a dictionary with the data to plot the Elbow curve
 #
 
-print('Creating Elbow Curve',datetime.now())
-elbow_Data_1 = {"k": k, "inertia": inertia_1}
+print('Creating Elbow Curve',datetime.now());
+elbow_Data_1 = {"k": k, "inertia": inertia_1};
 
 #
 # Create a DataFrame with the data to plot the Elbow curve
 #
 
-elbow_DF_1 = pd.DataFrame(elbow_Data_1)
-elbow_DF_1
+elbow_DF_1 = pd.DataFrame(elbow_Data_1);
+elbow_DF_1;
 
 # %%
 #
@@ -196,7 +195,7 @@ elbow_DF_1
 # the different values of k to visually identify the optimal value for k.
 #
 
-print('Plotting Elbow Curve',datetime.now())
+print('Plotting Elbow Curve',datetime.now());
 elbow_DF_1.hvplot.line(x="k",y="inertia",title= "Elbow Curve",xticks=k,width=1200,height=600)
 
 # %% [markdown]
@@ -217,55 +216,55 @@ elbow_DF_1.hvplot.line(x="k",y="inertia",title= "Elbow Curve",xticks=k,width=120
 # Initialize the K-Means model using the best value for k
 #
 
-print('Initializing K-Means Model',datetime.now())
-model = KMeans(n_clusters=4, random_state=1)
-print('K-Means Model Initialized ',datetime.now())
+print('Initializing K-Means Model',datetime.now());
+model = KMeans(n_clusters=4, random_state=1);
+print('K-Means Model Initialized ',datetime.now());
 
 # %%
 #
 # Fit the K-Means model using the scaled data
 #
 
-print('Fitting K-Means Model',datetime.now())
-model.fit(crypto_Transformed)
-print('K-Means Model Fitted ',datetime.now())
+print('Fitting K-Means Model',datetime.now());
+model.fit(crypto_Transformed);
+print('K-Means Model Fitted ',datetime.now());
 
 # %%
 #
 # Predict the clusters to group the cryptocurrencies using the scaled data
 #
 
-print('Predicting Clusters',datetime.now())
-k4 = model.predict(crypto_Transformed)
+print('Predicting Clusters',datetime.now());
+k4 = model.predict(crypto_Transformed);
 
 #
 # Print the resulting array of cluster values.
 #
 
-print(k4)
-print('Clusters Predicted ',datetime.now())
+print(k4);
+print('Clusters Predicted ',datetime.now());
 
 # %%
 #
 # Create a copy of the DataFrame
 #
 
-print('Creating copy of DataFrame',datetime.now())
-clusters_Predicted = crypto_Transformed.copy()
-print('Copy of DataFrame Created ',datetime.now())
+print('Creating copy of DataFrame',datetime.now());
+clusters_Predicted = crypto_Transformed.copy();
+print('Copy of DataFrame Created ',datetime.now());
 
 # %%
 #
 # Add a new column to the DataFrame with the predicted clusters
 #
 
-print('Adding Predicted Clusters',datetime.now())
-clusters_Predicted['predicted_cluster'] = k4
+print('Adding Predicted Clusters',datetime.now());
+clusters_Predicted['predicted_cluster'] = k4;
 
 # Display the updated data
 
-print(clusters_Predicted.head())
-print('Predicted Clusters Added',datetime.now())
+print(clusters_Predicted.head());
+print('Predicted Clusters Added',datetime.now());
 
 # %%
 #
@@ -276,7 +275,7 @@ print('Predicted Clusters Added',datetime.now())
 # the cryptocurrency represented by each data point.
 #
 
-print('Plotting Predicted Clusters',datetime.now())
+print('Plotting Predicted Clusters',datetime.now());
 clusters_Predicted.hvplot.scatter(x='price_change_percentage_24h',y='price_change_percentage_7d',
                                   by='predicted_cluster',hover_cols = 'coin_id',
                                   legend='top_right',width=1200,height=600)
@@ -292,18 +291,18 @@ clusters_Predicted.hvplot.scatter(x='price_change_percentage_24h',y='price_chang
 # Create a PCA model instance and set `n_components=3`.
 #
 
-print('Creating PCA Model',datetime.now())
-pca = PCA(n_components=3)
-print('PCA Model Created ',datetime.now())  
+print('Creating PCA Model',datetime.now());
+pca = PCA(n_components=3);
+print('PCA Model Created ',datetime.now());
 
 # %%
 #
 # Use the PCA model with `fit_transform` to reduce to three principal components.
 #
 
-print('Fitting PCA Model',datetime.now())   
-clusters_PCA = pca.fit_transform(clusters_Predicted)
-print('PCA Model Fitted ',datetime.now())
+print('Fitting PCA Model',datetime.now());
+clusters_PCA = pca.fit_transform(clusters_Predicted);
+print('PCA Model Fitted ',datetime.now());
 
 #
 # View the first five rows of the DataFrame. 
@@ -317,15 +316,15 @@ clusters_PCA[:5]
 # can be attributed to each principal component.
 #
 
-print('Explained Variance',datetime.now())  
-pca.explained_variance_ratio_
+print('Explained Variance',datetime.now());
+pca.explained_variance_ratio_;
 
 # %%
 #
 # Calculate the Total Explained Variance by summing all 3 Explained Variance Ratios
 #
 
-print('Total Explained Variance',datetime.now())
+print('Total Explained Variance ',datetime.now());
 sum(pca.explained_variance_ratio_)
 
 # %% [markdown]
@@ -335,36 +334,36 @@ sum(pca.explained_variance_ratio_)
 # 
 # **Answer:** 0.34871677 + 0.31363391 + 0.22627118 = 0.88862186
 # 
-# **Answer may change depending on re-execution of the whole code**
+# **Answer may change depending on re-execution of the whole code**, [particularly when using different computers]
 
 # %%
 #
 # Create a new DataFrame with the PCA data.
 #
 
-print('Creating PCA DataFrame',datetime.now())  
-cluster_PCA_df = pd.DataFrame(clusters_PCA,columns = ["PCA1", "PCA2", "PCA3"])
-print(cluster_PCA_df)
+print('Creating PCA DataFrame',datetime.now());
+cluster_PCA_df = pd.DataFrame(clusters_PCA,columns = ["PCA1", "PCA2", "PCA3"]);
+print(cluster_PCA_df);
 
 #
 # Copy the crypto names from the original data
 #
 
-cluster_PCA_df['coin_id'] = list(clusters_Predicted.index)
-print(cluster_PCA_df)
+cluster_PCA_df['coin_id'] = list(clusters_Predicted.index);
+print(cluster_PCA_df);
 
 #
-# Set the coinid column as index
+# Set the coin id column as index
 #
 
-cluster_PCA_df = cluster_PCA_df.set_index('coin_id')
+cluster_PCA_df = cluster_PCA_df.set_index('coin_id');
 
 #
 # Display sample data
 #
 
-print(cluster_PCA_df)
-print('PCA DataFrame Created ',datetime.now())
+print(cluster_PCA_df);
+print('PCA DataFrame Created ',datetime.now());
 
 # %% [markdown]
 # ---
@@ -377,15 +376,15 @@ print('PCA DataFrame Created ',datetime.now())
 # Create a list with the number of k-values from 1 to 11
 #
 
-k = list(range(1,12))
-print('k-values ',k)
+k = list(range(1,12));
+print('k-values ',k);
 
 # %%
 #
 # Create an empty list to store the inertia values
 #
 
-inertia_2 = []
+inertia_2 = [];
 
 #
 # Create a for loop to compute the inertia with each possible value of k
@@ -396,26 +395,26 @@ inertia_2 = []
 #
 
 for i in k:
-    k_model = KMeans(n_clusters=i, random_state=1,n_init=10,max_iter=1000)
-    k_model.fit(cluster_PCA_df)
-    inertia_2.append(k_model.inertia_)
-print('Values of Inertia 2 ', inertia_2)
+    k_model = KMeans(n_clusters=i, random_state=1,n_init=10,max_iter=1000);
+    k_model.fit(cluster_PCA_df);
+    inertia_2.append(k_model.inertia_);
+print('Values of Inertia 2 ', inertia_2);
 
 # %%
 #
 # Create a dictionary with the data to plot the Elbow curve
 #
 
-print('Creating Elbow Curve 2',datetime.now())  
-elbow_Data_2 = {"k": k, "inertia": inertia_2}
+print('Creating Elbow Curve 2',datetime.now());
+elbow_Data_2 = {"k": k, "inertia": inertia_2};
 
 #
 # Create a DataFrame with the data to plot the Elbow curve
 #
 
-elbow_DF_2 = pd.DataFrame(elbow_Data_2)
-print(elbow_DF_2)
-print('Elbow Curve 2 Created ',datetime.now())
+elbow_DF_2 = pd.DataFrame(elbow_Data_2);
+print(elbow_DF_2);
+print('Elbow Curve 2 Created ',datetime.now());
 
 # %%
 #
@@ -423,8 +422,8 @@ print('Elbow Curve 2 Created ',datetime.now())
 # the different values of k to visually identify the optimal value for k.
 #
 
-print('Plotting Elbow Curve 2',datetime.now())
-elbow_DF_2.hvplot.line(x="k", title="Elbow Curve", xticks=k,width=1200,height=600)
+print('Plotting Elbow Curve 2',datetime.now());
+elbow_DF_2.hvplot.line(x="k", title="Elbow Curve 2", xticks=k,width=1200,height=600)
 
 # %% [markdown]
 # #### Answer the following questions: 
@@ -446,25 +445,25 @@ elbow_DF_2.hvplot.line(x="k", title="Elbow Curve", xticks=k,width=1200,height=60
 # Initialize the K-Means model using the best value for k
 #
 
-print('Initializing K-Means Model 2',datetime.now())    
-model = KMeans(n_clusters=4, random_state=1)
-print('K-Means Model 2 Initialized ',datetime.now())
+print('Initializing K-Means Model 2',datetime.now());
+model = KMeans(n_clusters=4, random_state=1);
+print('K-Means Model 2 Initialized ',datetime.now());
 
 # %%
 #
 # Fit the K-Means model using the PCA data
 #
 
-print('Fitting K-Means Model 2',datetime.now())
-model.fit(cluster_PCA_df)
-print('K-Means Model 2 Fitted ',datetime.now())
+print('Fitting K-Means Model 2',datetime.now());
+model.fit(cluster_PCA_df);
+print('K-Means Model 2 Fitted ',datetime.now());
 
 # %%
 #
 # Predict the clusters to group the cryptocurrencies using the PCA data
 #
 
-k4 = model.predict(cluster_PCA_df)
+k4 = model.predict(cluster_PCA_df);
 
 #
 # Print the resulting array of cluster values.
@@ -477,21 +476,21 @@ k4
 # Create a copy of the DataFrame with the PCA data
 #
 
-print('Creating copy of DataFrame with PCA data',datetime.now())    
-copy_Cluster_PCA_df= cluster_PCA_df.copy()
+print('Creating copy of DataFrame with PCA data',datetime.now());
+copy_Cluster_PCA_df = cluster_PCA_df.copy();
 
 #
 # Add a new column to the DataFrame with the predicted clusters
 #
 
-copy_Cluster_PCA_df['predicted_cluster'] = k4
+copy_Cluster_PCA_df['predicted_cluster'] = k4;
 
 #
 # Display sample data
 #
 
-print(copy_Cluster_PCA_df)
-print('Copy of DataFrame with PCA data Created ',datetime.now())
+print(copy_Cluster_PCA_df);
+print('Copy of DataFrame with PCA data Created ',datetime.now());
 
 # %%
 #
@@ -502,9 +501,14 @@ print('Copy of DataFrame with PCA data Created ',datetime.now())
 # the cryptocurrency represented by each data point.
 #
 
-print('Plotting Predicted Clusters 2',datetime.now())   
-copy_Cluster_PCA_df.hvplot.scatter(x="PCA1",y="PCA2",by ='predicted_cluster',
-                                   hover_cols='coin_id',legend='top_right',width=1200,height=600)
+print('Plotting Predicted Clusters 2',datetime.now());
+copy_Cluster_PCA_df.hvplot.scatter(x="PCA1",
+                                   y="PCA2",
+                                   by ='predicted_cluster',
+                                   hover_cols='coin_id',
+                                   legend='top_right',
+                                   width=1200,
+                                   height=600);
 
 # %% [markdown]
 # ### Visualize and Compare the Results
